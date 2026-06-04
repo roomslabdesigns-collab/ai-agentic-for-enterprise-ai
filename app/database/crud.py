@@ -17,5 +17,11 @@ def save_chat(
     db.commit()
 
     db.refresh(chat)
+    
+def get_chat_history(db):
+
+    return db.query(
+        ChatHistory
+    ).all()
 
     return chat

@@ -75,3 +75,16 @@ async def upload_pdf(
         "message": "Upload successful",
         "filename": file.filename
     }
+from app.database.crud import (
+    save_chat,
+    get_chat_history
+)
+
+@app.get("/history")
+def history(
+    db: Session = Depends(get_db)
+):
+
+    chats = get_chat_history(db)
+
+    return chats
