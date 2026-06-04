@@ -8,10 +8,13 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.models import ChatRequest
-from app.rag.rag_pipeline import ask_question
+from app.agents.supervisor import supervisor
 
 from app.database.db import get_db
-from app.database.crud import save_chat
+from app.database.crud import (
+    save_chat,
+    get_chat_history
+)
 
 app = FastAPI(
     title="Enterprise AI Copilot",
@@ -30,7 +33,7 @@ def chat(
     db: Session = Depends(get_db)
 ):
 
-    answer = ask_question(
+    answer = supervisor(
         request.question
     )
 
@@ -75,10 +78,6 @@ async def upload_pdf(
         "message": "Upload successful",
         "filename": file.filename
     }
-from app.database.crud import (
-    save_chat,
-    get_chat_history
-)
 
 @app.get("/history")
 def history(
