@@ -1,12 +1,17 @@
 import os
+
 from fastapi import FastAPI
+from fastapi import UploadFile
+from fastapi import File
+from fastapi import Depends
+
+from sqlalchemy.orm import Session
 
 from app.models import ChatRequest
 from app.rag.rag_pipeline import ask_question
 
-
-from fastapi import UploadFile
-from fastapi import File
+from app.database.db import get_db
+from app.database.crud import save_chat
 
 app = FastAPI(
     title="Enterprise AI Copilot",
@@ -20,16 +25,26 @@ def home():
     }
 
 @app.post("/chat")
-def chat(request: ChatRequest):
+def chat(
+    request: ChatRequest,
+    db: Session = Depends(get_db)
+):
 
     answer = ask_question(
         request.question
+    )
+
+    save_chat(
+        db,
+        request.question,
+        answer
     )
 
     return {
         "question": request.question,
         "answer": answer
     }
+
 @app.post("/upload")
 async def upload_pdf(
     file: UploadFile = File(...)
@@ -59,4 +74,4 @@ async def upload_pdf(
     return {
         "message": "Upload successful",
         "filename": file.filename
-    }    
+    }
