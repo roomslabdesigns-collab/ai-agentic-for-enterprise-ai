@@ -1,5 +1,8 @@
-import ollama
+from ollama import Client
 
+client = Client(
+    host='http://127.0.0.1:11434'
+)
 
 def generate_answer(context, question):
 
@@ -17,14 +20,14 @@ Question:
 Answer:
 """
 
-    response = ollama.chat(
-        model="qwen3:4b",
+    response = client.chat(
+        model='qwen3:4b',
         messages=[
             {
-                "role": "user",
-                "content": prompt
+                'role': 'user',
+                'content': prompt
             }
         ]
     )
 
-    return response["message"]["content"]
+    return response['message']['content']
