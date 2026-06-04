@@ -11,11 +11,16 @@ def supervisor(question):
 
     question_lower = question.lower()
 
-    if (
-        "how many chats" in question_lower
-        or "chat history" in question_lower
-        or "database" in question_lower
-    ):
+    if any(
+    keyword in question_lower
+    for keyword in [
+        "how many chats",
+        "latest question",
+        "show chats",
+        "chat history",
+        "database"
+        ]
+    ):  
 
         return answer_database_question(
             question

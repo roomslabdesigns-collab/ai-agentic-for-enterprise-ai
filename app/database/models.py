@@ -1,10 +1,14 @@
 from sqlalchemy import (
     Column,
     Integer,
-    Text
+    Text,
+    String,
+    DateTime
 )
 
 from sqlalchemy.orm import declarative_base
+
+from datetime import datetime
 
 Base = declarative_base()
 
@@ -22,3 +26,27 @@ class ChatHistory(Base):
     question = Column(Text)
 
     answer = Column(Text)
+
+
+class Document(Base):
+
+    __tablename__ = "documents"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    filename = Column(
+        String
+    )
+
+    chunk_count = Column(
+        Integer
+    )
+
+    upload_time = Column(
+        DateTime,
+        default=datetime.utcnow
+    )

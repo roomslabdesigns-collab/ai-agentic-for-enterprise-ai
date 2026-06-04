@@ -13,8 +13,12 @@ from app.agents.supervisor import supervisor
 from app.database.db import get_db
 from app.database.crud import (
     save_chat,
-    get_chat_history
+    get_chat_history,
+    save_document
 )
+
+from app.rag.pdf_loader import extract_text
+from app.rag.chunker import chunk_text
 
 app = FastAPI(
     title="Enterprise AI Copilot",
@@ -26,6 +30,7 @@ def home():
     return {
         "message": "Enterprise AI Copilot Running"
     }
+
 
 @app.post("/chat")
 def chat(
@@ -48,9 +53,11 @@ def chat(
         "answer": answer
     }
 
+
 @app.post("/upload")
 async def upload_pdf(
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
 ):
 
     upload_dir = "uploads"
@@ -74,10 +81,26 @@ async def upload_pdf(
 
         buffer.write(content)
 
+    text = extract_text(
+        file_path
+    )
+
+    chunks = chunk_text(
+        text
+    )
+
+    save_document(
+        db,
+        file.filename,
+        len(chunks)
+    )
+
     return {
         "message": "Upload successful",
-        "filename": file.filename
+        "filename": file.filename,
+        "chunks": len(chunks)
     }
+
 
 @app.get("/history")
 def history(
