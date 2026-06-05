@@ -50,3 +50,22 @@ class Document(Base):
         DateTime,
         default=datetime.utcnow
     )
+
+
+class Memory(Base):
+
+    __tablename__ = "memory"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    key = Column(
+        String
+    )
+
+    value = Column(
+        Text
+    )

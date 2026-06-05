@@ -7,9 +7,27 @@ from app.agents.sql_agent import (
     answer_database_question
 )
 
+from app.agents.memory_agent import (
+    memory_handler
+)
+
 from app.rag.rag_pipeline import (
     ask_question
 )
+
+
+# MEMORY NODE
+def memory_node(state):
+
+    question = state["question"]
+
+    answer = memory_handler(
+        question
+    )
+
+    return {
+        "answer": answer
+    }
 
 
 # SQL NODE
@@ -45,6 +63,17 @@ def route_question(state):
 
     question = state["question"].lower()
 
+    memory_keywords = [
+        "my name is",
+        "what is my name"
+    ]
+
+    if any(
+        keyword in question
+        for keyword in memory_keywords
+    ):
+        return "memory"
+
     sql_keywords = [
         "how many chats",
         "latest question",
@@ -70,6 +99,11 @@ workflow = StateGraph(
 )
 
 workflow.add_node(
+    "memory",
+    memory_node
+)
+
+workflow.add_node(
     "sql",
     sql_node
 )
@@ -82,9 +116,15 @@ workflow.add_node(
 workflow.set_conditional_entry_point(
     route_question,
     {
+        "memory": "memory",
         "sql": "sql",
         "rag": "rag"
     }
+)
+
+workflow.add_edge(
+    "memory",
+    END
 )
 
 workflow.add_edge(
