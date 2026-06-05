@@ -8,7 +8,8 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.models import ChatRequest
-from app.agents.supervisor import supervisor
+
+from app.graph.workflow import graph
 
 from app.database.db import get_db
 from app.database.crud import (
@@ -25,6 +26,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
 @app.get("/")
 def home():
     return {
@@ -38,9 +40,13 @@ def chat(
     db: Session = Depends(get_db)
 ):
 
-    answer = supervisor(
-        request.question
+    result = graph.invoke(
+        {
+            "question": request.question
+        }
     )
+
+    answer = result["answer"]
 
     save_chat(
         db,

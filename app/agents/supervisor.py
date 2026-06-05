@@ -18,7 +18,10 @@ def supervisor(question):
         "latest question",
         "show chats",
         "chat history",
-        "database"
+        "database",
+        "how many documents",
+        "show documents",
+        "latest document"
         ]
     ):  
 

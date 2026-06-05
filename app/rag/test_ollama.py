@@ -1,15 +1,19 @@
-# test_ollama.py
+from ollama import Client
 
-import ollama
+client = Client(
+    host="http://127.0.0.1:11434"
+)
 
-response = ollama.chat(
+response = client.chat(
     model="qwen3:4b",
     messages=[
         {
             "role": "user",
-            "content": "hello"
+            "content": "Hello"
         }
     ]
 )
 
-print(response)
+print(
+    response["message"]["content"]
+)
