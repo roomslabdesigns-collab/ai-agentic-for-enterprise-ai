@@ -1,3 +1,57 @@
 # Enterprise AI Copilot
 
 Enterprise AI Copilot is a multi-agent AI assistant designed to help organizations interact with their documents, databases, and stored knowledge through natural language. The system combines Retrieval-Augmented Generation (RAG), database querying, memory management, and LangGraph-based orchestration to provide intelligent and context-aware responses. Users can upload PDF documents, which are automatically processed, chunked, embedded, and indexed using FAISS for semantic search. When a question is asked, a supervisor agent analyzes the query and routes it to the most appropriate agent. The SQL Agent handles database-related questions such as document counts and chat history, the RAG Agent retrieves relevant information from uploaded documents, and the Memory Agent stores and recalls user-specific information to enable personalized interactions. The project is built using FastAPI, LangGraph, Ollama, FAISS, and SQLite/PostgreSQL, demonstrating concepts such as multi-agent systems, vector databases, enterprise search, memory-augmented AI, and intelligent workflow orchestration. The architecture is designed to be scalable and can be extended with authentication, role-based access control, advanced memory systems, cloud deployment, and additional enterprise integrations.
+
+User
+  │
+  ▼
+FastAPI API Layer
+  │
+  ▼
+Supervisor Agent
+  │
+  ▼
+LangGraph Workflow
+  │
+  ├── SQL Agent ──► Database
+  │
+  ├── RAG Agent ──► FAISS Vector Store ──► Documents
+  │
+  └── Memory Agent ──► Memory Database
+  │
+  ▼
+Final Response
+
+
+**Features**
+**Multi-Agent Architecture**
+SQL Agent for database-related questions
+RAG Agent for document-based question answering
+Memory Agent for storing and retrieving user information
+Supervisor Agent for intelligent query routing
+LangGraph workflow for agent orchestration
+
+**Document Intelligence**
+PDF document ingestion
+Automatic text extraction
+Text chunking and preprocessing
+FAISS vector database indexing
+Semantic document retrieval
+
+**Memory System**
+Persistent memory storage
+User preference tracking
+Personalized interactions
+Context-aware responses
+
+**Database Integration**
+SQLite/PostgreSQL support
+Chat history storage
+Document metadata management
+Memory persistence
+
+**API Layer**
+FastAPI backend
+Chat endpoint
+Document upload endpoint
+Chat history endpoint
